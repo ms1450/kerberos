@@ -52,12 +52,11 @@ def server_connection():
         token = base64.b64encode(reply_complete.encode())
     response = response_first.encode() + token + response_end.encode()
 
-    # AES CIPHER
-    hashed = hashlib.sha256()
-    hashed.update(bytes(password))
-    pwhash = hashed.digest()
-    aes = AES.new(pwhash, AES.MODE_ECB)
-    encrypted_response = aes.encrypt(response)
+    # AES ENCRYPT
+    key = hashlib.sha256(password).hexdigest()
+    cipher_text = base64.b64decode(response)
+    cipher = AES.new(key, AES.MODE_ECB)
+    encrypted_response = cipher.encrypt(cipher_text)
     conn.send(encrypted_response)
 
     #conn.send(response)
