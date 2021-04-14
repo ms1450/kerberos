@@ -2,6 +2,7 @@ import hashlib
 import socket
 import requests
 import rsa
+import base64
 from Crypto.Cipher import AES
 
 # App Server Public Key
@@ -37,27 +38,29 @@ def server_connection():
     req = requests.post('http://52.14.213.84/oauth_provider/token.php', data={'grant_type': 'client_credentials'},
                         auth=(username, password))
     reply_complete = req.text
+    print(reply_complete)
     reply = req.text.split("\"")
     # Read the response
+    # Encrypt the entire access_token using the public key followed by base64 encryption
+    response_end = "\"}"
     if reply[1] == "access_token":
         encrypted = rsa.encrypt(reply_complete.encode(), app_server_public_key)
-        response_first = b"{\"auth\":\"success\",\"token\":\""
-        response_second = b"\"}"
+        token = base64.b64encode(encrypted)
+        response_first = "{\"auth\":\"success\",\"token\":\""
     else:
-        encrypted = b""
-        response_first = b"{\"auth\":\"fail\",\"token\":\""
-        response_second = b"\"}"
-    response = response_first + encrypted + response_second
-    # Hashes the password of the client
+        response_first = "{\"auth\":\"fail\",\"token\":\""
+        token = base64.b64encode(reply_complete.encode())
+    response = response_first.encode() + token + response_end.encode()
+
+    # AES CIPHER
     hashed = hashlib.sha256()
     hashed.update(bytes(password))
     pwhash = hashed.digest()
-    # Encrypts the response using SHA256 hash
-    # TODO AES ENCRYPTION
-    obj = AES.new(pwhash, AES.MODE_ECB)
-    encrypted_response = obj.encrypt(response)
-    # Sends the encrypted data to the client
+    aes = AES.new(pwhash, AES.MODE_ECB)
+    encrypted_response = aes.encrypt(response)
     conn.send(encrypted_response)
+
+    #conn.send(response)
     conn.close()  # close the connection
 
 
