@@ -3,7 +3,7 @@ import rsa
 import hashlib
 import base64
 import json
-from Crypto.Cipher import AES
+#from Crypto.Cipher import AES
 
 debug = False
 app_server_private_key_pks = b'-----BEGIN RSA PRIVATE ' \
@@ -46,11 +46,12 @@ def client_connection():
     response = client_socket.recv(1024)
 
     # AES DECRYPT
-    key = hashlib.sha256(password.encode()).hexdigest()
-    cipher_text = base64.b64decode(response)
-    cipher = AES.new(key, AES.MODE_ECB)
-    decrypted_response = cipher.decrypt(cipher_text)
-
+    #key = hashlib.sha256(password.encode()).hexdigest()
+    #cipher_text = base64.b64decode(response)
+    #cipher = AES.new(key, AES.MODE_ECB)
+    #decrypted_response = cipher.decrypt(cipher_text)
+    decrypted_response = response
+    
     result = json.loads(decrypted_response)
     # Base64 decode the token from response
     token = base64.b64decode(result['access_token'])
