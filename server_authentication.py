@@ -2,7 +2,7 @@ import hashlib
 import socket
 import requests
 import rsa
-import crypto
+import pycrypto
 
 # App Server Public Key
 app_server_public_key_pks = b'-----BEGIN RSA PUBLIC ' \
