@@ -3,7 +3,7 @@ import socket
 import requests
 import rsa
 import base64
-from Crypto.Cipher import AES
+#from Crypto.Cipher import AES
 
 # App Server Public Key
 app_server_public_key_pks = b'-----BEGIN RSA PUBLIC ' \
@@ -53,13 +53,13 @@ def server_connection():
     response = response_first.encode() + token + response_end.encode()
 
     # AES ENCRYPT
-    key = hashlib.sha256(password.encode()).hexdigest()
-    cipher_text = base64.b64decode(response)
-    cipher = AES.new(key, AES.MODE_ECB)
-    encrypted_response = cipher.encrypt(cipher_text)
-    conn.send(encrypted_response)
+    #key = hashlib.sha256(password.encode()).hexdigest()
+    #cipher_text = base64.b64decode(response)
+    #cipher = AES.new(key, AES.MODE_ECB)
+    #encrypted_response = cipher.encrypt(cipher_text)
+    #conn.send(encrypted_response)
 
-    #conn.send(response)
+    conn.send(response)
     conn.close()  # close the connection
 
 
