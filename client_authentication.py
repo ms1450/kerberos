@@ -45,12 +45,11 @@ def client_connection():
     client_socket.send(encrypted)
     response = client_socket.recv(1024)
 
-    # AES DECIPHER
-    hashed = hashlib.sha256()
-    hashed.update(bytes(password))
-    pwhash = hashed.digest()
-    daes = AES.new(pwhash, AES.MODE_ECB)
-    decrypted_response = daes.decrypt(response)
+    # AES DECRYPT
+    key = hashlib.sha256(password).hexdigest()
+    cipher_text = base64.b64decode(response)
+    cipher = AES.new(key, AES.MODE_ECB)
+    decrypted_response = cipher.decrypt(cipher_text)
 
     result = json.loads(decrypted_response)
     # Base64 decode the token from response
