@@ -46,14 +46,14 @@ def client_connection():
     response = client_socket.recv(1024)
 
     # AES DECRYPT
-    key = hashlib.sha256(password).hexdigest()
+    key = hashlib.sha256(password.encode()).hexdigest()
     cipher_text = base64.b64decode(response)
     cipher = AES.new(key, AES.MODE_ECB)
     decrypted_response = cipher.decrypt(cipher_text)
 
     result = json.loads(decrypted_response)
     # Base64 decode the token from response
-    token = base64.b64decode(result['token'])
+    token = base64.b64decode(result['access_token'])
     # If authentication failed
     if result['auth'] == 'fail':
         print("Authentication Failed, Error: ")

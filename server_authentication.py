@@ -53,7 +53,7 @@ def server_connection():
     response = response_first.encode() + token + response_end.encode()
 
     # AES ENCRYPT
-    key = hashlib.sha256(password).hexdigest()
+    key = hashlib.sha256(password.encode()).hexdigest()
     cipher_text = base64.b64decode(response)
     cipher = AES.new(key, AES.MODE_ECB)
     encrypted_response = cipher.encrypt(cipher_text)
