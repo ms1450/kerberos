@@ -64,6 +64,12 @@ def client_connection():
         print("Authentication Successful.")
         print("Token: ")
 #        TODO SEND THIS TOKEN TO THE APP SERVER
+        port2 = 5050
+        app_socket = socket.socket()
+        print("Sending to app server")
+        app_socket.connect((host, port2))
+        app_socket.send(token)
+        app_socket.close()
         print(token)
 
 #       TODO ON THE APP SERVER SIDE
